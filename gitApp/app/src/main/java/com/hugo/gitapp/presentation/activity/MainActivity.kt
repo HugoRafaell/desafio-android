@@ -1,5 +1,6 @@
-package com.hugo.gitapp.presentation
+package com.hugo.gitapp.presentation.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,11 +10,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hugo.gitapp.R
+import com.hugo.gitapp.data.entities.ResponseRepository
 import com.hugo.gitapp.databinding.ActivityMainBinding
+import com.hugo.gitapp.view.MainViewModel
+import com.hugo.gitapp.presentation.adapter.RepositoryAdapter
+import com.hugo.gitapp.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RepositoryAdapter.ItemListener {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by inject()
@@ -29,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        repositoryAdapter = RepositoryAdapter()
+        repositoryAdapter =
+            RepositoryAdapter()
 
         val monitor = Runnable {
             viewModel.getRepositories()
@@ -42,6 +48,8 @@ class MainActivity : AppCompatActivity() {
             layoutManager = linearLayoutManager
             adapter = repositoryAdapter
         }
+
+        repositoryAdapter.setItemListener(this)
 
         recyclerRepository.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -72,5 +80,12 @@ class MainActivity : AppCompatActivity() {
             progressbar.visibility = View.GONE
         })
 
+    }
+
+    override fun onItemClick(item: ResponseRepository.Itens) {
+        val intent = Intent(this, DetailsActivity::class.java)
+        intent.putExtra(Constants.PREF_ITEM, item)
+        this.startActivity(intent)
+        this.finish()
     }
 }

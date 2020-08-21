@@ -1,4 +1,4 @@
-package com.hugo.gitapp.presentation
+package com.hugo.gitapp.view
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -36,14 +36,16 @@ class MainViewModel(private val retrofitClient: RetrofitClient): ViewModel() {
                         Log.d("MainViewModel", Thread.currentThread().name)
                         repositories.value = result.body()
                     } else {
-                        notification.value = NOTIFICATION_GET_REPOSITORIES_FAILED
+                        notification.value =
+                            NOTIFICATION_GET_REPOSITORIES_FAILED
                         Log.e("MainViewModel", "get values failed: \n " +
                                 "${result.errorBody()?.toString()}")
                     }
                 }
             } catch (ex: Exception) {
                 withContext(Dispatchers.Main) {
-                    notification.value = NOTIFICATION_GET_REPOSITORIES_FAILED
+                    notification.value =
+                        NOTIFICATION_GET_REPOSITORIES_FAILED
                 }
                 Log.e("MainViewModel", "get values failed: \n ${ex.message}")
             }
@@ -64,14 +66,16 @@ class MainViewModel(private val retrofitClient: RetrofitClient): ViewModel() {
                         newRepositories.value = result.body()
                         mIsLoading = false
                     } else {
-                        notification.value = NOTIFICATION_GET_NEW_REPOSITORIES_FAILED
+                        notification.value =
+                            NOTIFICATION_GET_NEW_REPOSITORIES_FAILED
                         Log.e("MainViewModel", "get values failed: \n " +
                                 "${result.errorBody()?.toString()}")
                     }
                 }
             } catch (ex: Exception) {
                 withContext(Dispatchers.Main) {
-                    notification.value = NOTIFICATION_GET_NEW_REPOSITORIES_FAILED
+                    notification.value =
+                        NOTIFICATION_GET_NEW_REPOSITORIES_FAILED
                 }
                 Log.e("MainViewModel", "get values failed: \n ${ex.message}")
             }

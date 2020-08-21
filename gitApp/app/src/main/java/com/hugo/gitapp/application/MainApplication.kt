@@ -1,6 +1,7 @@
 package com.hugo.gitapp.application
 
 import android.app.Application
+import com.hugo.gitapp.modules.DetailsViewModelModule
 import com.hugo.gitapp.modules.MainViewModelModule
 import com.hugo.gitapp.modules.networkingModule
 import org.koin.android.ext.koin.androidContext
@@ -20,6 +21,7 @@ class MainApplication: Application() {
             androidContext(this@MainApplication)
             modules(listOf(
                 MainViewModelModule,
+                DetailsViewModelModule,
                 networkingModule
             ))
         }

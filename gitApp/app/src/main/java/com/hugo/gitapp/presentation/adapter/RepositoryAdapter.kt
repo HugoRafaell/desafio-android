@@ -1,4 +1,4 @@
-package com.hugo.gitapp.presentation
+package com.hugo.gitapp.presentation.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -24,14 +24,9 @@ class RepositoryAdapter: RecyclerView.Adapter<RepositoryAdapter.ValueViewHolder>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ValueViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_repository, parent, false)
-        val holder = ValueViewHolder(view)
-
-        holder.itemView.setOnClickListener {
-            if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-
-            }
-        }
-        return holder
+        return ValueViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int = itens.size
@@ -39,6 +34,12 @@ class RepositoryAdapter: RecyclerView.Adapter<RepositoryAdapter.ValueViewHolder>
     override fun onBindViewHolder(holder: ValueViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
             val value: ResponseRepository.Itens = itens[position]
+
+            holder.itemView.setOnClickListener {
+                if (holder.adapterPosition != RecyclerView.NO_POSITION) {
+                    mItemListener?.onItemClick(value)
+                }
+            }
             holder.bind(value)
         }
     }
@@ -65,6 +66,7 @@ class RepositoryAdapter: RecyclerView.Adapter<RepositoryAdapter.ValueViewHolder>
             Glide.with(itemView.context)
                 .load(itens.owner?.avatar_url)
                 .placeholder(R.drawable.ic_person)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(itemView.avatar)
             itemView.username.text = itens.owner?.login
             itemView.surname.text = itens.owner?.login
