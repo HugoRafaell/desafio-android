@@ -12,8 +12,9 @@ interface APIRequest {
     @GET("search/repositories?q=language:Java&sort=stars")
     suspend fun getRepositories(@Query("page") page: String): Response<ResponseRepository>
 
-    @GET("repos/{creator}/{repository}/pulls?state=all")
+    @GET("repos/{creator}/{repository}/pulls")
     suspend fun getPulls(@Path("creator") creator: String,
                          @Path("repository") repository: String,
-                         @Query("page") page: String): Response<MutableList<ResponsePull>>
+                         @Query("page") page: String,
+                         @Query("state") state: String): Response<MutableList<ResponsePull>>
 }

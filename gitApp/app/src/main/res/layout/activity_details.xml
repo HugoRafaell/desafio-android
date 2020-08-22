@@ -20,8 +20,7 @@
             android:layout_height="wrap_content"
             android:background="#E8E8E8"
             android:orientation="horizontal"
-            android:visibility="gone"
-            android:padding="15dp"
+            android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints">
@@ -30,19 +29,37 @@
                 android:id="@+id/opened"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/orange"
+                android:background="@drawable/rounded_corner"
+                android:padding="5dp"
+                android:textColor="@android:color/black"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                tools:text="16 opened" />
+                android:text="Open" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/closed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
                 android:textColor="@android:color/black"
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
                 android:textSize="14dp"
                 android:textStyle="bold"
-                tools:text=" / 800 closed" />
+                android:text="Closed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner"
+                android:backgroundTint="@color/blueAccent"
+                android:textColor="@android:color/white"
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:text="All" />
 
         </LinearLayout>
 

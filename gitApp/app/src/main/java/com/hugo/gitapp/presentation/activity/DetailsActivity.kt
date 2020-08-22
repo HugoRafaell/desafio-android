@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,8 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
 
     private var item: ResponseRepository.Itens? = null
 
+    private var state: String = "all"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_details)
@@ -49,7 +52,7 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
         supportActionBar?.title = item?.full_name
 
         val monitor = Runnable {
-            viewModel.getPrs(item?.owner?.login!!, item?.name!!, this)
+            viewModel.getPrs(item?.owner?.login!!, item?.name!!, this, state)
         }
         handler.post(monitor)
 
@@ -64,6 +67,11 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
 
         recyclerPull.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0) {
+                    linearLayout.visibility = View.VISIBLE
+                } else if (dy > 0)
+                    linearLayout.visibility = View.GONE
+
                 val visibleItemCount = linearLayoutManager.childCount
                 val totalItemCount = linearLayoutManager.itemCount
                 val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
@@ -76,7 +84,7 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
 
                 if (shouldLoadMore) {
                     progressbar.visibility = View.VISIBLE
-                    viewModel.loadingMore(item?.owner?.login!!, item?.name!!)
+                    viewModel.loadingMore(item?.owner?.login!!, item?.name!!, state)
                 }
             }
         })
@@ -90,6 +98,93 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
             pullAdapter.addData(it)
             progressbar.visibility = View.GONE
         })
+
+        all.setOnClickListener {
+            state = "all"
+            updateButtons()
+            val monitor = Runnable {
+                viewModel.getPrs(item?.owner?.login!!, item?.name!!, this, state)
+            }
+            handler.post(monitor)
+        }
+
+        opened.setOnClickListener {
+            state = "open"
+            updateButtons()
+            val monitor = Runnable {
+                viewModel.getPrs(item?.owner?.login!!, item?.name!!, this, state)
+            }
+            handler.post(monitor)
+        }
+
+        closed.setOnClickListener {
+            state = "closed"
+            updateButtons()
+            val monitor = Runnable {
+                viewModel.getPrs(item?.owner?.login!!, item?.name!!, this, state)
+            }
+            handler.post(monitor)
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForColorStateLists")
+    private fun updateButtons() {
+        when (state) {
+            "closed" -> {
+                closed.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.white))
+                all.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+                opened.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+
+                closed.backgroundTintList = ContextCompat
+                    .getColorStateList(this, R.color.blueAccent)
+                opened.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+                all.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+            }
+            "open" -> {
+                opened.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.white))
+                all.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+                closed.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+
+                opened.backgroundTintList = ContextCompat
+                    .getColorStateList(this, R.color.blueAccent)
+                all.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+                closed.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+            }
+            "all" -> {
+                all.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.white))
+                opened.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+                closed.setTextColor(
+                    ContextCompat
+                        .getColor(this, android.R.color.black))
+
+                all.backgroundTintList = ContextCompat
+                    .getColorStateList(this, R.color.blueAccent)
+                opened.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+                closed.backgroundTintList = ContextCompat
+                    .getColorStateList(this, android.R.color.white)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

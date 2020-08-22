@@ -29,13 +29,14 @@ class DetailsViewModel(private val retrofitClient: RetrofitClient): ViewModel() 
     fun getPrs(
         creator: String,
         repository: String,
-        detailsActivity: DetailsActivity
+        detailsActivity: DetailsActivity,
+        state: String?
     ) {
         detailsActivity.progressLoading()
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = retrofitClient.getService()
-                    .getPulls(creator, repository,"1")
+                    .getPulls(creator, repository,"1", state!!)
                 Log.d("DetailsViewModel", Thread.currentThread().name)
                 withContext(Dispatchers.Main) {
                     if (result.isSuccessful) {
@@ -58,13 +59,13 @@ class DetailsViewModel(private val retrofitClient: RetrofitClient): ViewModel() 
         }
     }
 
-    fun loadingMore(creator: String, repository: String) {
+    fun loadingMore(creator: String, repository: String, state: String?) {
         mIsLoading = true
         page++
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = retrofitClient.getService()
-                    .getPulls(creator, repository, page.toString())
+                    .getPulls(creator, repository, page.toString(), state!!)
                 Log.e("DetailsViewModel", Thread.currentThread().name)
                 withContext(Dispatchers.Main) {
                     if (result.isSuccessful) {
