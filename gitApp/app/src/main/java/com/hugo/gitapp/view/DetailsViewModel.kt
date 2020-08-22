@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hugo.gitapp.data.entities.ResponsePull
+import com.hugo.gitapp.presentation.activity.DetailsActivity
 import com.hugo.gitapp.retrofit.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,12 @@ class DetailsViewModel(private val retrofitClient: RetrofitClient): ViewModel() 
     var mIsLastPage = false
     val pageSize = 30
 
-    fun getPrs(creator: String, repository: String) {
+    fun getPrs(
+        creator: String,
+        repository: String,
+        detailsActivity: DetailsActivity
+    ) {
+        detailsActivity.progressLoading()
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = retrofitClient.getService()

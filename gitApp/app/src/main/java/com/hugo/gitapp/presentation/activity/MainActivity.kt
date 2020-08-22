@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), RepositoryAdapter.ItemListener {
         val monitor = Runnable {
             viewModel.getRepositories()
         }
-        handler.postDelayed(monitor, 1000)
+        handler.post(monitor)
 
         linearLayoutManager = LinearLayoutManager(
             this@MainActivity)

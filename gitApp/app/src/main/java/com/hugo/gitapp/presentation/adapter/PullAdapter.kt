@@ -38,7 +38,7 @@ class PullAdapter: RecyclerView.Adapter<PullAdapter.ValueViewHolder>(){
 
             holder.itemView.setOnClickListener {
                 if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-
+                    mItemListener?.onItemClick(value)
                 }
             }
             holder.bind(value)

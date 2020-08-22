@@ -2,6 +2,7 @@ package com.hugo.gitapp.presentation.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -26,7 +27,7 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
     private lateinit var binding: ActivityDetailsBinding
     private val viewModel: DetailsViewModel by inject()
 
-    private lateinit var pullAdapter: PullAdapter
+    private var pullAdapter: PullAdapter = PullAdapter()
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val handler = Handler()
@@ -40,9 +41,6 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        pullAdapter =
-            PullAdapter()
-
         if (intent.getSerializableExtra(Constants.PREF_ITEM) != null)
             item = intent.getSerializableExtra(Constants.PREF_ITEM) as ResponseRepository.Itens?
 
@@ -50,12 +48,10 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = item?.full_name
 
-        progressLoading()
-
         val monitor = Runnable {
-            viewModel.getPrs(item?.owner?.login!!, item?.name!!)
+            viewModel.getPrs(item?.owner?.login!!, item?.name!!, this)
         }
-        handler.postDelayed(monitor, 1000)
+        handler.post(monitor)
 
         linearLayoutManager = LinearLayoutManager(
             this@DetailsActivity)
@@ -108,11 +104,12 @@ class DetailsActivity : AppCompatActivity(), PullAdapter.ItemListener {
     }
 
     override fun onItemClick(pull: ResponsePull) {
-
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(pull.html_url))
+        startActivity(browserIntent)
     }
 
     @SuppressLint("InflateParams")
-    private fun progressLoading() {
+    fun progressLoading() {
         val alertDialog = AlertDialog.Builder(this)
         val row = layoutInflater.inflate(R.layout.progress_dialog, null)
 
